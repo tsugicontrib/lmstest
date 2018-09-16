@@ -11,7 +11,7 @@ $OUTPUT->header();
 $OUTPUT->bodyStart();
 $OUTPUT->topNav();
 
-$OUTPUT->welcomeUserCourse();
+require_once("nav.php");
 
 if ( $LTI->user->instructor ) {
    echo("Instructors can't send grades");

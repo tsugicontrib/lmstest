@@ -14,15 +14,11 @@ $OUTPUT->header();
 $OUTPUT->bodyStart();
 $OUTPUT->topNav();
 
+require_once("nav.php");
+
 $OUTPUT->welcomeUserCourse();
 
-?>
-<ul>
-<li><a href="grades.php">Test Grades</a></li>
-</ul>
-<pre>
-<?php
-
+echo("<pre>\n");
 echo("IP Address: ".Net::getIP()."\n");
 echo(Output::safe_var_dump($_SESSION));
 var_dump($USER);
