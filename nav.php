@@ -34,6 +34,6 @@ $currentPage= basename($_SERVER["SCRIPT_NAME"]);
 <div>
 <ul>
 <li><a href="index.php" <?php if ( $currentPage == 'index.php' ) echo('class="active"'); ?>>Home</a></li>
-<li><a href="grades.php" <?php if ( $currentPage == 'grades.php' ) echo('class="active"'); ?>>Test Grades</a></li>
+<li><a href="grades.php" <?php if ( $currentPage == 'grades.php' ) echo('class="active"'); ?>>Send Grade</a></li>
 </ul>
 </div>
