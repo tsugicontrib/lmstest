@@ -4,6 +4,7 @@ require_once "../config.php";
 use \Tsugi\Core\LTIX;
 use \Tsugi\Util\U;
 use \Tsugi\Util\LTI13;
+use \Tsugi\UI\Output;
 
 // Handle all forms of launch
 $LTI = LTIX::requireData();
@@ -37,10 +38,13 @@ if ( strlen($missing) > 0 ) {
   <ul>
     <li><a href="#tabs-1">Token</a></li>
     <li><a href="#tabs-2">Load Memberships</a></li>
+    <li><a href="#tabs-3">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
 <?php
+$roster_access_token = false;
+$debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Membership URL: ".$lti13_membership_url."\n");
     $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
@@ -51,7 +55,7 @@ if ( strlen($lti13_membership_url) > 0 ) {
         return $status;
     }
     $roster_access_token = $roster_token_data['access_token'];
-    echo("Roster Access Token=".$roster_access_token);
+    echo("Roster Access Token=".$roster_access_token."\n");
 } else {
     echo("Did not receive membership_url\n");
 }
@@ -59,7 +63,31 @@ if ( strlen($lti13_membership_url) > 0 ) {
     </pre>
   </div>
   <div id="tabs-2">
-    <p>Yada 2</p>
+    <pre>
+<?php
+if ( $roster_access_token ) {
+    $debug_log = array();
+    $roster = LTI13::loadRoster($lti13_membership_url, $roster_access_token, $debug_log);
+    if ( is_string($roster) ) {
+        echo($roster."\n");
+    } else {
+        echo("Loaded ".count($roster)." members\n");
+        echo(htmlentities(Output::safe_print_r($roster)));
+    }
+} else {
+    echo("Did not get roster_access_token\n");
+}
+?>
+    </pre>
+  </div>
+  <div id="tabs-3">
+    <pre>
+<?php
+if ( count($debug_log) > 0 ) {
+    print_r($debug_log);
+}
+?>
+    </pre>
   </div>
 </div>
 
