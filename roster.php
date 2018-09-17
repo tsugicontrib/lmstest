@@ -37,7 +37,7 @@ if ( strlen($missing) > 0 ) {
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Token</a></li>
-    <li><a href="#tabs-2">Load Memberships</a></li>
+    <li><a href="#tabs-2">Memberships</a></li>
     <li><a href="#tabs-3">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
