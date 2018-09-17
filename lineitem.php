@@ -43,6 +43,7 @@ if ( strlen($missing) > 0 ) {
     <pre>
 <?php
 if ( strlen($lti13_lineitem) > 0 ) {
+    echo("Line Item URL: ".$lti13_lineitem."\n");
     $grade_token_data = LTI13::getGradeToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
     echo(Output::safe_var_dump($grade_token_data));
     if ( ! isset($grade_token_data['access_token']) ) {

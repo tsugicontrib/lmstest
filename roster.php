@@ -19,7 +19,7 @@ $key_key = LTIX::ltiParameter('key_key');
 $lti13_token_url = LTIX::ltiParameter('lti13_token_url');
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
 
-$lti13_lineitem = LTIX::ltiParameter('lti13_lineitem');
+$lti13_membership_url = LTIX::ltiParameter('lti13_membership_url');
 
 $missing = '';
 if ( strlen($key_key) < 1 ) $missing .= ' ' . 'key_key';
@@ -35,34 +35,31 @@ if ( strlen($missing) > 0 ) {
 ?>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Grade Token</a></li>
-    <li><a href="#tabs-2">Roster Token</a></li>
-    <li><a href="#tabs-3">Assignments (AGS) Token</a></li>
+    <li><a href="#tabs-1">Token</a></li>
+    <li><a href="#tabs-2">Load Memberships</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
 <?php
-if ( strlen($lti13_lineitem) > 0 ) {
-    $grade_token_data = LTI13::getGradeToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    print_r($grade_token_data);
-    if ( ! isset($grade_token_data['access_token']) ) {
-        $status = U::get($grade_token_data, 'error', 'Did not receive access token');
+if ( strlen($lti13_membership_url) > 0 ) {
+    echo("Membership URL: ".$lti13_membership_url."\n");
+    $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
+    print_r($roster_token_data);
+    if ( ! isset($roster_token_data['access_token']) ) {
+        $status = U::get($roster_token_data, 'error', 'Did not receive access token');
         error_log($status);
         return $status;
     }
-    $grade_access_token = $grade_token_data['access_token'];
-    echo("Grade Access Token=".$grade_access_token);
+    $roster_access_token = $roster_token_data['access_token'];
+    echo("Roster Access Token=".$roster_access_token);
 } else {
-    echo("Did not receive lineitem url\n");
+    echo("Did not receive membership_url\n");
 }
 ?>
     </pre>
   </div>
   <div id="tabs-2">
     <p>Yada 2</p>
-  </div>
-  <div id="tabs-3">
-    <p>Yada 3</p>
   </div>
 </div>
 
