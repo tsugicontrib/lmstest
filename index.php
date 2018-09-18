@@ -4,7 +4,11 @@ require_once "../config.php";
 
 use \Tsugi\Core\LTIX;
 use \Tsugi\Util\Net;
+use \Tsugi\Util\U;
+use \Tsugi\Util\LTI13;
 use \Tsugi\UI\Output;
+
+require_once "util.php";
 
 // Handle all forms of launch
 $LTI = LTIX::requireData();
@@ -24,6 +28,9 @@ unset($sc['lti_post']);
 $lti_data = $sc['lti'];
 unset($sc['lti']);
 
+$raw_jwt = U::get($post, 'id_token');
+$jwt = LTI13::parse_jwt($raw_jwt);
+
 function preSafe($var) {
 echo("<pre>\n");
 echo(Output::safe_var_dump($var));
@@ -39,7 +46,12 @@ echo("\n</pre>\n");
     <li><a href="#tabs-4">Tsugi User Object</a></li>
   </ul>
   <div id="tabs-1">
-    <?php preSafe($post); ?>
+    <pre>
+<?php 
+    echo(Output::safe_var_dump($post));
+    print_jwt($jwt);
+?>
+    </pre>
   </div>
   <div id="tabs-2">
     <?php preSafe($lti_data); ?>

@@ -6,6 +6,8 @@ use \Tsugi\Util\U;
 use \Tsugi\Util\LTI13;
 use \Tsugi\UI\Output;
 
+require_once "util.php";
+
 // Handle all forms of launch
 $LTI = LTIX::requireData();
 
@@ -53,6 +55,9 @@ if ( strlen($lti13_lineitem) > 0 ) {
     }
     $grade_access_token = $grade_token_data['access_token'];
     echo("Grade Access Token=".$grade_access_token);
+    $required_fields = false;
+    $jwt = LTI13::parse_jwt($grade_access_token, $required_fields);
+    print_jwt($jwt);
 } else {
     echo("Did not receive lineitem url\n");
 }

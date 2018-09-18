@@ -6,6 +6,8 @@ use \Tsugi\Util\U;
 use \Tsugi\Util\LTI13;
 use \Tsugi\UI\Output;
 
+require_once "util.php";
+
 // Handle all forms of launch
 $LTI = LTIX::requireData();
 
@@ -56,6 +58,9 @@ if ( strlen($lti13_membership_url) > 0 ) {
     }
     $roster_access_token = $roster_token_data['access_token'];
     echo("Roster Access Token=".$roster_access_token."\n");
+    $required_fields = false;
+    $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
+    print_jwt($jwt);
 } else {
     echo("Did not receive membership_url\n");
 }
