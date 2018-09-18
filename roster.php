@@ -41,6 +41,8 @@ if ( strlen($missing) > 0 ) {
     <li><a href="#tabs-1">Token</a></li>
     <li><a href="#tabs-2">Memberships</a></li>
     <li><a href="#tabs-3">Debug Log</a></li>
+    <li><a href="#tabs-4">With Sourcedids</a></li>
+    <li><a href="#tabs-5">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
@@ -86,6 +88,51 @@ if ( $roster_access_token ) {
     </pre>
   </div>
   <div id="tabs-3">
+    <pre>
+<?php
+if ( count($debug_log) > 0 ) {
+    print_r($debug_log);
+}
+?>
+    </pre>
+  </div>
+  <div id="tabs-4">
+    <pre>
+<?php
+$debug_log = array();
+if ( strlen($lti13_membership_url) > 0 ) {
+    echo("Membership URL: ".$lti13_membership_url."\n");
+    $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
+    print_r($roster_token_data);
+    if ( ! isset($roster_token_data['access_token']) ) {
+        $status = U::get($roster_token_data, 'error', 'Did not receive access token');
+        error_log($status);
+        return $status;
+    }
+    $roster_access_token = $roster_token_data['access_token'];
+    echo("Roster Access Token=".$roster_access_token."\n");
+    $required_fields = false;
+    $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
+    print_jwt($jwt);
+} else {
+    echo("Did not receive membership_url\n");
+}
+if ( $roster_access_token ) {
+    $debug_log = array();
+    $roster = LTI13::loadRoster($lti13_membership_url, $roster_access_token, $debug_log);
+    if ( is_string($roster) ) {
+        echo($roster."\n");
+    } else {
+        echo("Loaded ".count($roster)." members\n");
+        echo(htmlentities(Output::safe_print_r($roster)));
+    }
+} else {
+    echo("Did not get roster_access_token\n");
+}
+?>
+    </pre>
+  </div>
+  <div id="tabs-5">
     <pre>
 <?php
 if ( count($debug_log) > 0 ) {
