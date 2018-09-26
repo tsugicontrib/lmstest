@@ -52,7 +52,7 @@ $debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Membership URL: ".$lti13_membership_url."\n");
     $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    print_r($roster_token_data);
+    echo(htmlentities(Output::safe_print_r($roster_token_data)));
     if ( ! isset($roster_token_data['access_token']) ) {
         $status = U::get($roster_token_data, 'error', 'Did not receive access token');
         error_log($status);
@@ -91,7 +91,7 @@ if ( $roster_access_token ) {
     <pre>
 <?php
 if ( count($debug_log) > 0 ) {
-    print_r($debug_log);
+    echo(htmlentities(Output::safe_print_r($debug_log)));
 }
 ?>
     </pre>
@@ -103,7 +103,7 @@ $debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Membership URL: ".$lti13_membership_url."\n");
     $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    print_r($roster_token_data);
+    echo(htmlentities(Output::safe_print_r($roster_token_data)));
     if ( ! isset($roster_token_data['access_token']) ) {
         $status = U::get($roster_token_data, 'error', 'Did not receive access token');
         error_log($status);
@@ -136,7 +136,7 @@ if ( $roster_access_token ) {
     <pre>
 <?php
 if ( count($debug_log) > 0 ) {
-    print_r($debug_log);
+    echo(htmlentities(Output::safe_print_r($debug_log)));
 }
 ?>
     </pre>
