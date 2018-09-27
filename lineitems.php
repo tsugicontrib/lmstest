@@ -103,7 +103,6 @@ if ( $lineitems_access_token ) {
 } else {
     echo("Did not get lineitems_access_token\n");
 }
-$lineitems_access_token=false; // Debug
 ?>
     </pre>
   </div>
@@ -118,12 +117,17 @@ if ( count($debug_log) > 0 ) {
   </div>
   <div id="tabs-4">
 <ul>
+<?php
+if ( $lineitems_access_token && strlen($lti13_lineitems) > 0 ) {
+$parms = "token=".urlencode($lineitems_access_token) . "&url=" . urlencode($lti13_lineitems);
+?>
 <li>
-  <a href="lineitems_add.php" title="Add LineItem" target="iframe-frame"
+  <a href="lineitems_add.php?<?= $parms ?>" title="Add LineItem" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Add LineItem
   </a>
 </li>
+<?php } ?>
 </ul>
   </div>
 
