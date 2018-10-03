@@ -18,6 +18,10 @@ $OUTPUT->topNav();
 
 require_once("nav.php");
 
+$filter_tag = U::get($_GET, 'tag', '');
+$filter_lti_link_id = U::get($_GET, 'lti_link_id', '');
+$filter_resource_id = U::get($_GET, 'resource_id', '');
+
 $key_key = LTIX::ltiParameter('key_key');
 $lti13_token_url = LTIX::ltiParameter('lti13_token_url');
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
@@ -63,8 +67,13 @@ if ( strlen($lti13_lineitems) > 0 ) {
     echo("Did not receive lineitems url\n");
 }
 
+$url = false;
 if ( $lineitems_access_token ) {
     $debug_log = array();
+    $url = $lti13_lineitems;
+    if ( strlen($filter_tag) > 0 ) $url = U::add_url_parm($url, 'tag', $filter_tag);
+    if ( strlen($filter_lti_link_id) > 0 ) $url = U::add_url_parm($url, 'lti_link_id', $filter_lti_link_id);
+    if ( strlen($filter_resource_id) > 0 ) $url = U::add_url_parm($url, 'resource_id', $filter_resource_id);
     $lineitems = LTI13::loadLineItems($lti13_lineitems, $lineitems_access_token, $debug_log);
     if ( is_string($lineitems) ) {
         echo($lineitems."\n");
@@ -105,7 +114,19 @@ if ( $lineitems_access_token ) {
   Add LineItem
   </a>
 </p>
+<h2>Filter Values</h2>
+<p>
+<form>
+<p>resource_id <input type="text" name="resource_id" value="<?= htmlentities($filter_resource_id) ?>"></p>
+<p>tag <input type="text" name="tag" value="<?= htmlentities($filter_tag) ?>"></p>
+<p>lti_link_id <input type="text" name="lti_link_id" value="<?= htmlentities($filter_lti_link_id) ?>"></p>
+<input type="submit" value="Filter Results">
+</form>
+</p>
 <?php
+        if ( $url ) {
+            echo("<p>LineItems Url: ".htmlentities($url)."</p>\n");
+        }
     }
 } else {
     echo("Did not get lineitems_access_token\n");
