@@ -72,22 +72,27 @@ if ( $lineitems_access_token ) {
         echo("<h1>Retrieved ".count($lineitems)." LineItems</h1>\n");
         echo("<ul>\n");
         foreach($lineitems as $lineitem) {
-$detail_parms = $parms . "&id=".urlencode($lineitem->id);
+            $detail_parms = $parms . "&id=".urlencode($lineitem->id);
+            echo("<li>\n");
+            echo(htmlentities($lineitem->label)) ;
+            if ( isset($lineitem->ltiLinkId) ) echo(" (auto-created) ");
 ?>
-<li>
-  <?= htmlentities($lineitem->label) ?>  (
+ (
   <a href="lineitems_detail.php?<?= $detail_parms ?>" title="detail" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
-  Detail
-  </a> | 
-  <a href="lineitems_delete.php?<?= $detail_parms ?>" title="delete" target="iframe-frame"
+  Detail</a> | 
+  <a href="lineitems_results.php?<?= $detail_parms ?>" title="results" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
-  Delete
-  </a> | 
+  Show Results</a> | 
+  <a href="lineitems_score.php?<?= $detail_parms ?>" title="score" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Send Score</a> | 
   <a href="lineitems_update.php?<?= $detail_parms ?>" title="update" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
-  Update
-  </a>
+  Update</a> |
+  <a href="lineitems_delete.php?<?= $detail_parms ?>" title="delete" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Delete</a>
 )
 </li>
 <?php
