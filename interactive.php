@@ -42,89 +42,71 @@ if ( strlen($missing) > 0 ) {
     onload="document.getElementById('iframe-spinner').style.display='none';">
    </iframe>
 </div>
-<div id="tabs">
-  <ul>
-    <li><a href="#tabs-1">Token</a></li>
-    <li><a href="#tabs-2">LineItems List</a></li>
-    <li><a href="#tabs-3">Debug Log</a></li>
-  </ul>
-  <div id="tabs-1">
-    <pre>
 <?php
 $lineitems_access_token = false;
 $debug_log = array();
+$parms = false;
 if ( strlen($lti13_lineitems) > 0 ) {
-    echo("Membership URL: ".$lti13_lineitems."\n");
     $lineitems_token_data = LTI13::getLineItemsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    print_r($lineitems_token_data);
     if ( ! isset($lineitems_token_data['access_token']) ) {
         $status = U::get($lineitems_token_data, 'error', 'Did not receive access token');
         error_log($status);
         return $status;
     }
     $lineitems_access_token = $lineitems_token_data['access_token'];
-    echo("Roster Access Token=".$lineitems_access_token."\n");
     $required_fields = false;
     $jwt = LTI13::parse_jwt($lineitems_access_token, $required_fields);
-    print_jwt($jwt);
+    if ( $lineitems_access_token && strlen($lti13_lineitems) > 0 ) {
+        $parms = "token=".urlencode($lineitems_access_token) . "&url=" . urlencode($lti13_lineitems);
+    }
 } else {
     echo("Did not receive lineitems url\n");
 }
-?>
-    </pre>
-  </div>
-  <div id="tabs-2">
-    <pre>
-<?php
+
 if ( $lineitems_access_token ) {
     $debug_log = array();
     $lineitems = LTI13::loadLineItems($lti13_lineitems, $lineitems_access_token, $debug_log);
     if ( is_string($lineitems) ) {
         echo($lineitems."\n");
     } else {
-        echo("Loaded ".count($lineitems)." members\n");
-        if ( count($lineitems) > 0 && isset($lineitems[0]->id) && is_string($lineitems[0]->id) ) {
-            $lineitem_url = $lineitems[0]->id;
-            echo("Loading data for the first lineitem...\n");
-            $lineitem = LTI13::loadLineItem($lineitem_url, $lineitems_access_token, $debug_log);
-            if ( is_string($lineitem) ) {
-                echo("Failed loading ".htmlentities($lineitem_url)."\n");
-                echo("Status: ".$lineitem."\n");
-            } else {
-                echo(htmlentities(Output::safe_print_r($lineitem)));
-            }
-        } else {
-            echo("Did not find valid lineitem to test single item GET...\n");
+        echo("<h1>Retrieved ".count($lineitems)." LineItems</h1>\n");
+        echo("<ul>\n");
+        foreach($lineitems as $lineitem) {
+$detail_parms = $parms . "&id=".urlencode($lineitem->id);
+?>
+<li>
+  <?= htmlentities($lineitem->label) ?>  (
+  <a href="lineitems_detail.php?<?= $detail_parms ?>" title="detail" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Detail
+  </a> | 
+  <a href="lineitems_delete.php?<?= $detail_parms ?>" title="delete" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Delete
+  </a> | 
+  <a href="lineitems_update.php?<?= $detail_parms ?>" title="update" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Update
+  </a>
+)
+</li>
+<?php
         }
-        echo("\nAll lineitems:\n");
-        echo(htmlentities(Output::safe_print_r($lineitems)));
+        echo("</ul>\n");
+?>
+<p>
+  <a href="lineitems_add.php?<?= $parms ?>" title="Add LineItem" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Add LineItem
+  </a>
+</p>
+<?php
     }
 } else {
     echo("Did not get lineitems_access_token\n");
 }
-?>
-    </pre>
-  </div>
-  <div id="tabs-3">
-    <pre>
-<?php
-if ( count($debug_log) > 0 ) {
-    echo(htmlentities(Output::safe_print_r($debug_log)));
-}
-?>
-    </pre>
-  </div>
 
-</div>
-<?php
 $OUTPUT->footerStart();
-?>
-<script>
-  $( function() {
-    $( "#tabs" ).tabs();
-  } );
-  </script>
-<?php
 $OUTPUT->footerEnd();
 
 
