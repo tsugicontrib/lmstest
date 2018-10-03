@@ -15,7 +15,7 @@ $debug_log = array();
 if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['doDelete']) ) {
 
     $debug_log = array();
-    $retval = LTI13::deleteLineItem($_POST['url'], $_POST['token'], $debug_log);
+    $retval = LTI13::deleteLineItem($_POST['id'], $_POST['token'], $debug_log);
     echo("<pre>\n");
 
     if ( $retval ) {

@@ -84,24 +84,28 @@ if ( $lineitems_access_token ) {
             $detail_parms = $parms . "&id=".urlencode($lineitem->id);
             echo("<li>\n");
             echo(htmlentities($lineitem->label)) ;
-            if ( isset($lineitem->ltiLinkId) ) echo(" (auto-created) ");
+            $auto_created = isset($lineitem->ltiLinkId);
+            if ( $auto_created ) echo(" (auto-created) ");
 ?>
  (
   <a href="lineitems_detail.php?<?= $detail_parms ?>" title="detail" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Detail</a> | 
-  <a href="lineitems_results.php?<?= $detail_parms ?>" title="results" target="iframe-frame"
-  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
-  Show Results</a> | 
   <a href="lineitems_score.php?<?= $detail_parms ?>" title="score" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Send Score</a> | 
+  <a href="lineitems_results.php?<?= $detail_parms ?>" title="results" target="iframe-frame"
+  onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
+  Show Results</a> 
+<?php if ( ! $auto_created ) { ?>
+  | 
   <a href="lineitems_update.php?<?= $detail_parms ?>" title="update" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Update</a> |
   <a href="lineitems_delete.php?<?= $detail_parms ?>" title="delete" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Delete</a>
+<?php } ?>
 )
 </li>
 <?php
