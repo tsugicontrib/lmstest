@@ -74,7 +74,7 @@ if ( $lineitems_access_token ) {
     if ( strlen($filter_tag) > 0 ) $url = U::add_url_parm($url, 'tag', $filter_tag);
     if ( strlen($filter_lti_link_id) > 0 ) $url = U::add_url_parm($url, 'lti_link_id', $filter_lti_link_id);
     if ( strlen($filter_resource_id) > 0 ) $url = U::add_url_parm($url, 'resource_id', $filter_resource_id);
-    $lineitems = LTI13::loadLineItems($lti13_lineitems, $lineitems_access_token, $debug_log);
+    $lineitems = LTI13::loadLineItems($url, $lineitems_access_token, $debug_log);
     if ( is_string($lineitems) ) {
         echo($lineitems."\n");
     } else {
