@@ -14,7 +14,8 @@ $debug_log = array();
 
 echo("<pre>\n");
 
-$lineitem = LTI13::loadLineItem($lineitem_url, $token, $debug_log);
+echo("Results: $lineitem_url\n");
+$lineitem = LTI13::loadResults($lineitem_url, $token, $debug_log);
 if ( is_string($lineitem) ) {
     echo("Failed loading ".htmlentities($lineitem_url)."\n");
     echo("Status: ".$lineitem."\n");

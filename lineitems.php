@@ -63,7 +63,7 @@ if ( strlen($lti13_lineitems) > 0 ) {
         return $status;
     }
     $lineitems_access_token = $lineitems_token_data['access_token'];
-    echo("Roster Access Token=".$lineitems_access_token."\n");
+    echo("LineItems Access Token=".$lineitems_access_token."\n");
     $required_fields = false;
     $jwt = LTI13::parse_jwt($lineitems_access_token, $required_fields);
     print_jwt($jwt);
