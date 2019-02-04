@@ -18,14 +18,13 @@ $OUTPUT->topNav();
 
 require_once("nav.php");
 
-$key_key = LTIX::ltiParameter('key_key');
 $lti13_token_url = LTIX::ltiParameter('lti13_token_url');
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
-
 $lti13_lineitems = LTIX::ltiParameter('lti13_lineitems');
+$lti13_client_id = LTIX::ltiParameter('lti13_client_id');
 
 $missing = '';
-if ( strlen($key_key) < 1 ) $missing .= ' ' . 'key_key';
+if ( strlen($lti13_client_id) < 1 ) $missing .= ' ' . 'client_id';
 if ( strlen($lti13_privkey) < 1 ) $missing .= ' ' . 'private_key';
 if ( strlen($lti13_token_url) < 1 ) $missing .= ' ' . 'token_url';
 
@@ -53,20 +52,26 @@ if ( strlen($missing) > 0 ) {
 <?php
 $lineitems_access_token = false;
 $debug_log = array();
-if ( strlen($lti13_lineitems) > 0 ) {
-    echo("Membership URL: ".$lti13_lineitems."\n");
-    $lineitems_token_data = LTI13::getLineItemsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    print_r($lineitems_token_data);
-    if ( ! isset($lineitems_token_data['access_token']) ) {
+if ( strlen($lti13_lineitems) > 0 && strlen($lti13_lineitems) > 0 ) {
+    echo("Token URL: ".$lti13_token_url."\n");
+    $lineitems_token_data = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
+    if ( $lineitems_token_data ) {
+        echo(htmlentities(Output::safe_print_r($lineitems_token_data)));
+    } else {
+        var_dump($lineitems_token_data);
+    }
+    if ( isset($lineitems_token_data['access_token']) ) {
+        $lineitems_access_token = $lineitems_token_data['access_token'];
+        echo("LineItems Access Token=".$lineitems_access_token."\n");
+        $required_fields = false;
+        $jwt = LTI13::parse_jwt($lineitems_access_token, $required_fields);
+        if ( ! is_string($jwt) ) print_jwt($jwt);
+    } else {
         $status = U::get($lineitems_token_data, 'error', 'Did not receive access token');
         error_log($status);
-        return $status;
+        echo($status."\n");
+        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
     }
-    $lineitems_access_token = $lineitems_token_data['access_token'];
-    echo("LineItems Access Token=".$lineitems_access_token."\n");
-    $required_fields = false;
-    $jwt = LTI13::parse_jwt($lineitems_access_token, $required_fields);
-    print_jwt($jwt);
 } else {
     echo("Did not receive lineitems url\n");
 }
@@ -77,6 +82,7 @@ if ( strlen($lti13_lineitems) > 0 ) {
     <pre>
 <?php
 if ( $lineitems_access_token ) {
+    echo("LineItems URL: ".$lti13_lineitems."\n");
     $debug_log = array();
     $lineitems = LTI13::loadLineItems($lti13_lineitems, $lineitems_access_token, $debug_log);
     if ( is_string($lineitems) ) {
