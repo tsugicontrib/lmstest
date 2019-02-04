@@ -19,10 +19,10 @@ $OUTPUT->topNav();
 require_once("nav.php");
 
 $key_key = LTIX::ltiParameter('key_key');
-$lti13_token_url = LTIX::ltiParameter('lti13_token_url');
+$lti13_token_url = trim(LTIX::ltiParameter('lti13_token_url'));
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
 
-$lti13_membership_url = LTIX::ltiParameter('lti13_membership_url');
+$lti13_membership_url = trim(LTIX::ltiParameter('lti13_membership_url'));
 
 $missing = '';
 if ( strlen($key_key) < 1 ) $missing .= ' ' . 'key_key';
@@ -51,18 +51,31 @@ $roster_access_token = false;
 $debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Membership URL: ".$lti13_membership_url."\n");
-    $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    echo(htmlentities(Output::safe_print_r($roster_token_data)));
-    if ( ! isset($roster_token_data['access_token']) ) {
-        $status = U::get($roster_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        return $status;
+    $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey, $debug_log);
+    echo("Roster token data:\n");
+    if ( $roster_token_data ) {
+        echo(htmlentities(Output::safe_print_r($roster_token_data)));
+    } else {
+        var_dump($roster_token_data);
     }
-    $roster_access_token = $roster_token_data['access_token'];
-    echo("Roster Access Token=".$roster_access_token."\n");
-    $required_fields = false;
-    $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
-    print_jwt($jwt);
+    echo("\n");
+    if ( $roster_token_data ) {
+        if ( isset($roster_token_data['access_token']) ) {
+            $roster_access_token = $roster_token_data['access_token'];
+            echo("Roster Access Token=".$roster_access_token."\n");
+            $required_fields = false;
+            $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
+            print_jwt($jwt);
+        } else {
+            $status = U::get($roster_token_data, 'error', 'Did not receive access token');
+            echo($status."\n");
+            echo("See debug log\n");
+        }
+    } else {
+        echo("Did not receive access_token\n");
+        echo("Token URL: ".$lti13_token_url."\n");
+        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
+    }
 } else {
     echo("Did not receive membership_url\n");
 }
@@ -102,18 +115,28 @@ if ( count($debug_log) > 0 ) {
 $debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Membership URL: ".$lti13_membership_url."\n");
-    $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    echo(htmlentities(Output::safe_print_r($roster_token_data)));
-    if ( ! isset($roster_token_data['access_token']) ) {
+    $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey, $debug_log);
+    echo("Roster token data:\n");
+    if ( $roster_token_data ) {
+        echo(htmlentities(Output::safe_print_r($roster_token_data)));
+    } else {
+        var_dump($roster_token_data);
+    }
+    echo("\n");
+    if ( isset($roster_token_data['access_token']) ) {
+        $roster_access_token = $roster_token_data['access_token'];
+        echo("Roster Access Token=".$roster_access_token."\n");
+        $required_fields = false;
+        $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
+        print_jwt($jwt);
+    } else {
         $status = U::get($roster_token_data, 'error', 'Did not receive access token');
         error_log($status);
-        return $status;
+        echo($status."\n");
+        echo("See debug log\n");
+        echo("Token URL: ".$lti13_token_url."\n");
+        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
     }
-    $roster_access_token = $roster_token_data['access_token'];
-    echo("Roster Access Token=".$roster_access_token."\n");
-    $required_fields = false;
-    $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
-    print_jwt($jwt);
 } else {
     echo("Did not receive membership_url\n");
 }
