@@ -10,5 +10,6 @@ function print_jwt($jwt) {
         echo("\n");
         $body = htmlentities(json_encode($jwt->body, JSON_PRETTY_PRINT));
         echo($body);
+        echo("\n");
     }
 }
