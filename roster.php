@@ -18,14 +18,13 @@ $OUTPUT->topNav();
 
 require_once("nav.php");
 
-$key_key = LTIX::ltiParameter('key_key');
 $lti13_token_url = LTIX::ltiParameter('lti13_token_url');
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
 $lti13_membership_url = LTIX::ltiParameter('lti13_membership_url');
 $lti13_client_id = LTIX::ltiParameter('lti13_client_id');
 
 $missing = '';
-if ( strlen($key_key) < 1 ) $missing .= ' ' . 'key_key';
+if ( strlen($lti13_client_id) < 1 ) $missing .= ' ' . 'lti13_client_id';
 if ( strlen($lti13_privkey) < 1 ) $missing .= ' ' . 'private_key';
 if ( strlen($lti13_token_url) < 1 ) $missing .= ' ' . 'token_url';
 
@@ -52,7 +51,7 @@ $debug_log = array();
 echo("Loading token...\n");
 echo("Token URL: ".$lti13_token_url."\n");
 if ( strlen($lti13_membership_url) > 0 && strlen($lti13_token_url) > 0 ) {
-    echo("Client_id=".$lti13_client_id." subject=".$key_key."\n");
+    echo("Client_id=".$lti13_client_id."\n");
     $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
     echo("Roster token data:\n");
     if ( $roster_token_data ) {
@@ -119,7 +118,7 @@ $debug_log = array();
 if ( strlen($lti13_membership_url) > 0 ) {
     echo("Getting token for membership with sourcedids...\n");
     echo("Token URL: ".$lti13_membership_url."\n");
-    echo("Client_id=".$lti13_client_id." subject=".$key_key."\n");
+    echo("Client_id=".$lti13_client_id."\n");
     $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
     echo("Roster token data:\n");
     if ( $roster_token_data ) {

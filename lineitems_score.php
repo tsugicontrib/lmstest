@@ -17,13 +17,13 @@ $token = $_REQUEST['token'];
 $debug_log = array();
 
 // TODO: This is operating at a too low abstraction level for now but we will move the code into Result to be cleaner
-$key_key = LTIX::ltiParameter('key_key');
+$lti13_client_id = LTIX::ltiParameter('lti13_client_id');
 $lti13_token_url = LTIX::ltiParameter('lti13_token_url');
 $lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
 $user_key = LTIX::ltiParameter('user_key');
 
 $missing = '';
-if ( strlen($key_key) < 1 ) $missing .= ' ' . 'key_key';
+if ( strlen($lti13_client_id) < 1 ) $missing .= ' ' . 'client_id';
 if ( strlen($lti13_privkey) < 1 ) $missing .= ' ' . 'private_key';
 if ( strlen($lti13_token_url) < 1 ) $missing .= ' ' . 'token_url';
 if ( strlen($user_key) < 1 ) $missing .= ' ' . 'user_key';
@@ -52,9 +52,9 @@ if ( ! $grade ) {
 
 echo("<pre>\n");
 echo("UR=$lti13_lineitem\n");
-echo("Getting token key_key=$key_key lti13_token_url=$lti13_token_url\n");
+echo("Getting token lti13_client_id=$lti13_client_id lti13_token_url=$lti13_token_url\n");
 
-$token_data = LTI13::getGradeToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey, $debug_log);
+$token_data = LTI13::getGradeToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
 if ( ! isset($token_data['access_token']) ) {
     $retval = U::get($token_data, 'error', 'Did not receive access token');
 } else{
