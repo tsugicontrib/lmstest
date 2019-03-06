@@ -89,6 +89,8 @@ if ( $lineitems_access_token ) {
         echo($lineitems."\n");
     } else {
         echo("Loaded ".count($lineitems)." members\n");
+        echo("\nAll lineitems:\n");
+        echo(htmlentities(Output::safe_print_r($lineitems)));
         if ( count($lineitems) > 0 && isset($lineitems[0]->id) && is_string($lineitems[0]->id) ) {
             $lineitem_url = $lineitems[0]->id;
             echo("Loading data for the first lineitem...\n");
@@ -102,8 +104,6 @@ if ( $lineitems_access_token ) {
         } else {
             echo("Did not find valid lineitem to test single item GET...\n");
         }
-        echo("\nAll lineitems:\n");
-        echo(htmlentities(Output::safe_print_r($lineitems)));
     }
 } else {
     echo("Did not get lineitems_access_token\n");

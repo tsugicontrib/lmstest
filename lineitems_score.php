@@ -9,23 +9,15 @@ use \Tsugi\Core\LTIX;
 
 $LTI = LTIX::requireData();
 
-$debug_log = false;
+$debug_log = array();
 $retval = false;
 
 $lti13_lineitem = $_REQUEST['id'];
-$token = $_REQUEST['token'];
-$debug_log = array();
+$gradetoken = $_REQUEST['gradetoken'];
 
-// TODO: This is operating at a too low abstraction level for now but we will move the code into Result to be cleaner
-$lti13_client_id = LTIX::ltiParameter('lti13_client_id');
-$lti13_token_url = LTIX::ltiParameter('lti13_token_url');
-$lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
 $user_key = LTIX::ltiParameter('user_key');
 
 $missing = '';
-if ( strlen($lti13_client_id) < 1 ) $missing .= ' ' . 'client_id';
-if ( strlen($lti13_privkey) < 1 ) $missing .= ' ' . 'private_key';
-if ( strlen($lti13_token_url) < 1 ) $missing .= ' ' . 'token_url';
 if ( strlen($user_key) < 1 ) $missing .= ' ' . 'user_key';
 
 if ( strlen($missing) > 0 ) {
@@ -35,12 +27,15 @@ if ( strlen($missing) > 0 ) {
 }
 
 $grade = U::get($_REQUEST,'grade');
-if ( ! $grade ) {
 ?>
 <h1>Send a grade</h1>
-<p>LineItem: <?= htmlentities($_REQUEST['id']) ?></p>
+<pre>
+Grade Token: <?= $gradetoken ?> 
+Lineitem: <?= htmlentities($lti13_lineitem) ?>
+</pre>
+<?php if ( ! $grade ) { ?>
 <form>
-<input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
+<input type="hidden" name="gradetoken" value="<?= htmlentities($_REQUEST['gradetoken']) ?>">
 <input type="hidden" name="url" value="<?= htmlentities($_REQUEST['url']) ?>">
 <input type="hidden" name="id" value="<?= htmlentities($_REQUEST['id']) ?>">
 <p>grade <input type="text" name="grade"></p>
@@ -51,20 +46,10 @@ if ( ! $grade ) {
 }
 
 echo("<pre>\n");
-echo("UR=$lti13_lineitem\n");
-echo("Getting token lti13_client_id=$lti13_client_id lti13_token_url=$lti13_token_url\n");
 
-$token_data = LTI13::getGradeToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
-if ( ! isset($token_data['access_token']) ) {
-    $retval = U::get($token_data, 'error', 'Did not receive access token');
-} else{
-    $access_token = $token_data['access_token'];
-    $tmp = "Sending grade $grade user_key=$user_key lti13_lineitem=$lti13_lineitem access_token=$access_token\n";
-    echo($tmp);
-    $tmp = "Sending grade $grade user_key=$user_key";
-    $retval = LTI13::sendLineItem($user_key, $grade, /*$comment*/ $tmp, $lti13_lineitem,
-        $access_token, $debug_log);
-}
+$tmp = "Sending grade $grade user_key=$user_key lti13_lineitem=$lti13_lineitem gradetoken=$gradetoken";
+$retval = LTI13::sendLineItem($user_key, $grade, $tmp, $lti13_lineitem,
+        $gradetoken, $debug_log);
 
 if ( $retval ) {
     echo("\nReturn value\n");

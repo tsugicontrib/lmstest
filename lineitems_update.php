@@ -3,9 +3,17 @@
 require_once("../config.php");
 
 use \Tsugi\Util\LTI13;
+use \Tsugi\Core\LTIX;
+
+$LTI = LTIX::requireData();
 
 $lineitem_url = $_REQUEST['id'];
 $token = $_REQUEST['token'];
+if ( isset($_REQUEST['gradetoken']) ) $token = $_REQUEST['gradetoken'];
+$debug_log = array();
+
+echo("<pre>\n");
+
 $debug_log = array();
 
 if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['scoreMaximum']) ) {
@@ -16,9 +24,8 @@ if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['scoreMaximum
     if ( isset($_POST['resourceId']) && strlen($_POST['resourceId']) > 0 ) $newitem->resourceId = $_POST['resourceId'];
     if ( isset($_POST['tag']) && strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
     
-    $debug_log = array();
-    $retval = LTI13::updateLineItem($_POST['id'], $_POST['token'], $newitem, $debug_log);
-    echo("<pre>\n");
+    echo("Updating line item\n");
+    $retval = LTI13::updateLineItem($_POST['id'], $token, $newitem, $debug_log);
 
     if ( $retval ) {
         var_dump($retval);
@@ -43,6 +50,7 @@ $tag = isset($lineitem->tag) ? $lineitem->tag : '';
 $scoreMaximum = isset($lineitem->scoreMaximum) ? $lineitem->scoreMaximum : '';
 $resourceId = isset($lineitem->resourceId) ? $lineitem->resourceId : '';
 ?>
+</pre>
 <h1>Update a Lineitem</h1>
 <p>Fields left blank will not be updated.</p>
 <form method="POST">

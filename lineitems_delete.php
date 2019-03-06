@@ -12,11 +12,13 @@ $lineitem_url = $_REQUEST['id'];
 $token = $_REQUEST['token'];
 $debug_log = array();
 
+echo("<pre>\n");
+
 if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['doDelete']) ) {
 
     $debug_log = array();
-    $retval = LTI13::deleteLineItem($_POST['id'], $_POST['token'], $debug_log);
-    echo("<pre>\n");
+    echo("Deleting line item: ".$_POST['id']."\n");
+    $retval = LTI13::deleteLineItem($_POST['id'], $token, $debug_log);
 
     if ( $retval ) {
         var_dump($retval);
@@ -25,7 +27,6 @@ if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['doDelete']) 
         echo("--- Debug Log --\n");
         var_dump($debug_log);
     }
-    echo("</pre>\n");
     return;
 }
 
@@ -37,6 +38,7 @@ if ( is_string($lineitem) ) {
 }
 
 ?>
+</pre>
 <h1>Delete Lineitem</h1>
 <p><?= htmlentities($lineitem->label) ?></p>
 <form method="POST">
