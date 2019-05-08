@@ -37,71 +37,27 @@ if ( strlen($missing) > 0 ) {
 ?>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Token</a></li>
-    <li><a href="#tabs-2">Memberships</a></li>
+    <li><a href="#tabs-0">Roster</a></li>
     <li><a href="#tabs-3">Debug Log</a></li>
     <li><a href="#tabs-4">With Sourcedids</a></li>
     <li><a href="#tabs-5">Debug Log</a></li>
   </ul>
-  <div id="tabs-1">
+  <div id="tabs-0">
     <pre>
 <?php
 $roster_access_token = false;
 $debug_log = array();
-echo("Loading token...\n");
-echo("Token URL: ".$lti13_token_url."\n");
-if ( strlen($lti13_membership_url) > 0 && strlen($lti13_token_url) > 0 ) {
-    echo("Client_id=".$lti13_client_id."\n");
-    $roster_token_data = LTI13::getRosterToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
-    echo("Roster token data:\n");
-    if ( $roster_token_data ) {
-        echo(htmlentities(Output::safe_print_r($roster_token_data)));
-    } else {
-        var_dump($roster_token_data);
-    }
-    echo("\n");
-    if ( $roster_token_data ) {
-        if ( isset($roster_token_data['access_token']) ) {
-            $roster_access_token = $roster_token_data['access_token'];
-            echo("Roster Access Token=".$roster_access_token."\n");
-            $required_fields = false;
-            $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
-            if ( ! is_string($jwt) ) print_jwt($jwt);
-        } else {
-            $status = U::get($roster_token_data, 'error', 'Did not receive access token');
-            echo($status."\n");
-            echo("See debug log\n");
-        }
-    } else {
-        echo("Did not receive access_token\n");
-        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
-    }
+echo('Calling  $LTI->context->loadNamesAndRoles'."\n");
+$nrps = $LTI->context->loadNamesAndRoles(false, $debug_log);
+if ( ! $nrps ) {
+    echo("Magic failed\n");
 } else {
-    echo("Did not receive membership_url\n");
+    echo("Loaded ".count($nrps->members)." members\n");
+    echo(htmlentities(Output::safe_print_r($nrps)));
 }
 ?>
-    </pre>
-  </div>
-  <div id="tabs-2">
-    <pre>
-<?php
-if ( $roster_access_token ) {
-    $debug_log = array();
-    echo("Loading roster...\n");
-    echo("Membership URL: ".$lti13_membership_url."\n");
-    $roster = LTI13::loadRoster($lti13_membership_url, $roster_access_token, $debug_log);
-    if ( is_string($roster) ) {
-        echo($roster."\n");
-    } else {
-        echo("Loaded ".count($roster)." members\n");
-        echo(htmlentities(Output::safe_print_r($roster)));
-    }
-} else {
-    echo("Did not get roster_access_token\n");
-}
-?>
-    </pre>
-  </div>
+</pre>
+</div>
   <div id="tabs-3">
     <pre>
 <?php
@@ -111,53 +67,23 @@ if ( count($debug_log) > 0 ) {
 ?>
     </pre>
   </div>
-  <div id="tabs-4">
+  <div id="tabs-3">
     <pre>
 <?php
+$roster_access_token = false;
 $debug_log = array();
-if ( strlen($lti13_membership_url) > 0 ) {
-    echo("Getting token for membership with sourcedids...\n");
-    echo("Token URL: ".$lti13_membership_url."\n");
-    echo("Client_id=".$lti13_client_id."\n");
-    $roster_token_data = LTI13::getRosterWithSourceDidsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
-    echo("Roster token data:\n");
-    if ( $roster_token_data ) {
-        echo(htmlentities(Output::safe_print_r($roster_token_data)));
-    } else {
-        var_dump($roster_token_data);
-    }
-    echo("\n");
-    if ( isset($roster_token_data['access_token']) ) {
-        $roster_access_token = $roster_token_data['access_token'];
-        echo("Roster Access Token=".$roster_access_token."\n");
-        $jwt = LTI13::parse_jwt($roster_access_token, $required_fields);
-        if ( ! is_string($jwt) ) print_jwt($jwt);
-    } else {
-        $status = U::get($roster_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        echo($status."\n");
-        echo("See debug log\n");
-        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
-    }
+// Note - for now, when we ask for sourcedids, the cert suite fails, (I think)
+echo('Calling  $LTI->context->loadNamesAndRoles(with sourcedids)'."\n");
+$nrps = $LTI->context->loadNamesAndRoles(true, $debug_log);
+if ( ! $nrps ) {
+    echo("Magic failed\n");
 } else {
-    echo("Did not receive membership_url\n");
-}
-if ( $roster_access_token ) {
-    $debug_log = array();
-    echo("Membership URL: ".$lti13_membership_url."\n");
-    $roster = LTI13::loadRoster($lti13_membership_url, $roster_access_token, $debug_log);
-    if ( is_string($roster) ) {
-        echo($roster."\n");
-    } else {
-        echo("Loaded ".count($roster)." members\n");
-        echo(htmlentities(Output::safe_print_r($roster)));
-    }
-} else {
-    echo("Did not get roster_access_token\n");
+    echo("Loaded ".count($nrps->members)." members\n");
+    echo(htmlentities(Output::safe_print_r($nrps)));
 }
 ?>
-    </pre>
-  </div>
+</pre>
+</div>
   <div id="tabs-5">
     <pre>
 <?php
