@@ -3,22 +3,22 @@
 require_once("../config.php");
 
 use \Tsugi\UI\Output;
-use \Tsugi\Util\LTI13;
+use \Tsugi\Core\LTIX;
 
-$debug_log = false;
+$LTI = LTIX::requireData();
+
 $retval = false;
 
 $lineitem_url = $_REQUEST['id'];
-$token = $_REQUEST['token'];
 $debug_log = array();
 
 echo("<pre>\n");
 
-if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['doDelete']) ) {
+if ( isset($_POST['id']) && isset($_POST['doDelete']) ) {
 
     $debug_log = array();
     echo("Deleting line item: ".$_POST['id']."\n");
-    $retval = LTI13::deleteLineItem($_POST['id'], $token, $debug_log);
+    $retval = $LTI->context->deleteLineItem($_POST['id'], $debug_log);
 
     if ( $retval ) {
         var_dump($retval);
@@ -30,7 +30,7 @@ if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['doDelete']) 
     return;
 }
 
-$lineitem = LTI13::loadLineItem($lineitem_url, $token, $debug_log);
+$lineitem = $LTI->context->loadLineItem($lineitem_url, $debug_log);
 if ( is_string($lineitem) ) {
     echo("Failed loading ".htmlentities($lineitem_url)."\n");
     echo("Status: ".$lineitem."\n");
@@ -42,7 +42,6 @@ if ( is_string($lineitem) ) {
 <h1>Delete Lineitem</h1>
 <p><?= htmlentities($lineitem->label) ?></p>
 <form method="POST">
-<input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
 <input type="hidden" name="id" value="<?= htmlentities($_REQUEST['id']) ?>">
 <input type="submit" name="doDelete" value="Delete LineItem">
 </form>
