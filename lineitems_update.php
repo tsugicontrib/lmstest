@@ -7,12 +7,10 @@ use \Tsugi\Core\LTIX;
 $LTI = LTIX::requireData();
 
 $lineitem_url = $_REQUEST['id'];
-$debug_log = array();
 
 echo("<pre>\n");
 
 $debug_log = array();
-
 if ( isset($_POST['id']) && isset($_POST['scoreMaximum']) ) {
 
     $newitem = new \stdClass();
