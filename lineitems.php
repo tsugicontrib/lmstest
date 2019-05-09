@@ -44,6 +44,7 @@ if ( strlen($missing) > 0 ) {
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Token</a></li>
+    <li><a href="#tabs-1d">Debug Log</a></li>
     <li><a href="#tabs-2">LineItems List</a></li>
     <li><a href="#tabs-3">Debug Log</a></li>
   </ul>
@@ -54,26 +55,19 @@ $lineitems_access_token = false;
 $debug_log = array();
 if ( strlen($lti13_lineitems) > 0 && strlen($lti13_lineitems) > 0 ) {
     echo("Token URL: ".$lti13_token_url."\n");
-    $lineitems_token_data = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
-    if ( $lineitems_token_data ) {
-        echo(htmlentities(Output::safe_print_r($lineitems_token_data)));
-    } else {
-        var_dump($lineitems_token_data);
-    }
-    if ( isset($lineitems_token_data['access_token']) ) {
-        $lineitems_access_token = $lineitems_token_data['access_token'];
-        echo("LineItems Access Token=".$lineitems_access_token."\n");
-        $required_fields = false;
-        $jwt = LTI13::parse_jwt($lineitems_access_token, $required_fields);
-        if ( ! is_string($jwt) ) print_jwt($jwt);
-    } else {
-        $status = U::get($lineitems_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        echo($status."\n");
-        echo("Private Key: ".substr($lti13_privkey, 0, 50)."\n");
-    }
+    $lineitems_access_token = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey, $debug_log);
+    echo("LineItems Access Token=". $lineitems_access_token . "\n");
 } else {
     echo("Did not receive lineitems url\n");
+}
+?>
+    </pre>
+  </div>
+  <div id="tabs-1d">
+    <pre>
+<?php
+if ( count($debug_log) > 0 ) {
+    echo(htmlentities(Output::safe_print_r($debug_log)));
 }
 ?>
     </pre>
@@ -81,9 +75,9 @@ if ( strlen($lti13_lineitems) > 0 && strlen($lti13_lineitems) > 0 ) {
   <div id="tabs-2">
     <pre>
 <?php
+$debug_log = array();
 if ( $lineitems_access_token ) {
     echo("LineItems URL: ".$lti13_lineitems."\n");
-    $debug_log = array();
     $lineitems = LTI13::loadLineItems($lti13_lineitems, $lineitems_access_token, $debug_log);
     if ( is_string($lineitems) ) {
         echo($lineitems."\n");

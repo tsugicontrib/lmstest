@@ -53,13 +53,7 @@ $debug_log = array();
 $parms = false;
 if ( strlen($lti13_lineitems) > 0 ) {
     $parms = "url=" . urlencode($lti13_lineitems);
-    $lineitems_token_data = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
-    if ( ! isset($lineitems_token_data['access_token']) ) {
-        $status = U::get($lineitems_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        return $status;
-    }
-    $lineitems_access_token = $lineitems_token_data['access_token'];
+    $lineitems_access_token = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
     if ( $lineitems_access_token ) {
         $parms .= "&token=".urlencode($lineitems_access_token);
     }
@@ -86,6 +80,7 @@ if ( $lineitems_access_token ) {
         echo("<h1>Retrieved ".count($lineitems)." LineItems</h1>\n");
         echo("<ul>\n");
         foreach($lineitems as $lineitem) {
+            if ( ! isset($lineitem->id) ) continue;
             $detail_parms = $parms . "&id=".urlencode($lineitem->id);
             echo("<li>\n");
             echo(htmlentities($lineitem->label)) ;
