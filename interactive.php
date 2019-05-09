@@ -3,7 +3,6 @@ require_once "../config.php";
 
 use \Tsugi\Core\LTIX;
 use \Tsugi\Util\U;
-use \Tsugi\Util\LTI13;
 use \Tsugi\UI\Output;
 
 require_once "util.php";
@@ -22,23 +21,6 @@ $filter_tag = U::get($_GET, 'tag', '');
 $filter_lti_link_id = U::get($_GET, 'lti_link_id', '');
 $filter_resource_id = U::get($_GET, 'resource_id', '');
 
-$lti13_client_id = LTIX::ltiParameter('lti13_client_id');
-$lti13_token_url = LTIX::ltiParameter('lti13_token_url');
-$lti13_privkey = LTIX::decrypt_secret(LTIX::ltiParameter('lti13_privkey'));
-
-$lti13_lineitems = LTIX::ltiParameter('lti13_lineitems');
-
-$missing = '';
-if ( strlen($lti13_client_id) < 1 ) $missing .= ' ' . 'lti13_client_id';
-if ( strlen($lti13_privkey) < 1 ) $missing .= ' ' . 'private_key';
-if ( strlen($lti13_token_url) < 1 ) $missing .= ' ' . 'token_url';
-
-if ( strlen($missing) > 0 ) {
-    echo('Missing '.$missing);
-    $OUTPUT->footer();
-    return;
-}
-
 ?>
 <div id="iframe-dialog" title="Read Only Dialog" style="display: none;">
    <img src="<?= $OUTPUT->getSpinnerUrl() ?>" id="iframe-spinner"><br/>
@@ -50,24 +32,8 @@ if ( strlen($missing) > 0 ) {
 $lineitems_access_token = false;
 $grade_token = false;
 $debug_log = array();
-$parms = false;
-if ( strlen($lti13_lineitems) > 0 ) {
-    $parms = "url=" . urlencode($lti13_lineitems);
-    $lineitems_access_token = LTI13::getLineItemsToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
-    if ( $lineitems_access_token ) {
-        $parms .= "&token=".urlencode($lineitems_access_token);
-    }
-
-    $grade_token = LTI13::getGradeToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
-    if ( $grade_token ) {
-        $parms .= "&gradetoken=".urlencode($grade_token);
-    }
-} else {
-    echo("Did not receive lineitems url\n");
-}
-
 $url = false;
-if ( $lineitems_access_token ) {
+
     $debug_log = array();
 
     $search = array();
@@ -83,7 +49,7 @@ if ( $lineitems_access_token ) {
         echo("<ul>\n");
         foreach($lineitems as $lineitem) {
             if ( ! isset($lineitem->id) ) continue;
-            $detail_parms = $parms . "&id=".urlencode($lineitem->id);
+            $detail_parms =  "id=".urlencode($lineitem->id);
             echo("<li>\n");
             echo(htmlentities($lineitem->label)) ;
             $auto_created = isset($lineitem->ltiLinkId);
@@ -113,9 +79,10 @@ if ( $lineitems_access_token ) {
 <?php
         }
         echo("</ul>\n");
+    }
 ?>
 <p>
-  <a href="lineitems_add.php?<?= $parms ?>" title="Add LineItem" target="iframe-frame"
+  <a href="lineitems_add.php" title="Add LineItem" target="iframe-frame"
   onclick="showModalIframe(this.title, 'iframe-dialog', 'iframe-frame', _TSUGI.spinnerUrl, true); return true;" >
   Add LineItem
   </a>
@@ -130,15 +97,6 @@ if ( $lineitems_access_token ) {
 </form>
 </p>
 <?php
-        if ( $url ) {
-            echo("<p>LineItems Url: ".htmlentities($url)."</p>\n");
-        }
-    }
-    echo("<p>LineItems token: ".htmlentities($lineitems_access_token)."</p>\n");
-    echo("<p>Grade token: ".htmlentities($grade_token)."</p>\n");
-} else {
-    echo("Did not get lineitems_access_token\n");
-}
 
 $OUTPUT->footerStart();
 $OUTPUT->footerEnd();

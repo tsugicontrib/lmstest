@@ -2,7 +2,10 @@
 
 require_once("../config.php");
 
-use \Tsugi\Util\LTI13;
+use \Tsugi\Core\LTIX;
+
+// Handle all forms of launch
+$LTI = LTIX::requireData();
 
 $debug_log = false;
 $retval = false;
@@ -17,7 +20,8 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
     if ( strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
     
     $debug_log = array();
-    $retval = LTI13::createLineItem($_POST['url'], $_POST['token'], $newitem, $debug_log);
+    // $retval = LTI13::createLineItem($_POST['url'], $_POST['token'], $newitem, $debug_log);
+    $retval = $LTI->context->createLineItem($newitem, $debug_log);
 }
 ?>
 <h1>Add a new Lineitem</h1>
