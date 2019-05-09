@@ -3,7 +3,6 @@
 require_once("../config.php");
 
 use \Tsugi\UI\Output;
-use \Tsugi\Util\LTI13;
 use \Tsugi\Core\LTIX;
 
 $LTI = LTIX::requireData();
@@ -11,20 +10,18 @@ $LTI = LTIX::requireData();
 $retval = false;
 
 $lineitem_url = $_REQUEST['id'];
-$gradetoken = $_REQUEST['gradetoken'];
 $debug_log = array();
 
 echo("<pre>\n");
 
 echo("Results: $lineitem_url\n");
-echo("Grade token: $gradetoken\n");
 
-$lineitem = LTI13::loadResults($lineitem_url, $gradetoken, $debug_log);
-if ( is_string($lineitem) ) {
+$results = $LTI->context->loadResults($lineitem_url, $debug_log);
+if ( is_string($results) ) {
     echo("Failed loading ".htmlentities($lineitem_url)."\n");
-    echo("Status: ".$lineitem."\n");
+    echo("Status: ".$results."\n");
 } else {
-    echo(htmlentities(Output::safe_print_r($lineitem)));
+    echo(htmlentities(Output::safe_print_r($results)));
 }
 
 if ( $retval ) {
