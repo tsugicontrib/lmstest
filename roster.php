@@ -67,7 +67,7 @@ if ( count($debug_log) > 0 ) {
 ?>
     </pre>
   </div>
-  <div id="tabs-3">
+  <div id="tabs-4">
     <pre>
 <?php
 $roster_access_token = false;

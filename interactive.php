@@ -48,7 +48,7 @@ if ( strlen($missing) > 0 ) {
 </div>
 <?php
 $lineitems_access_token = false;
-$grade_access_token = false;
+$grade_token = false;
 $debug_log = array();
 $parms = false;
 if ( strlen($lti13_lineitems) > 0 ) {
@@ -64,15 +64,9 @@ if ( strlen($lti13_lineitems) > 0 ) {
         $parms .= "&token=".urlencode($lineitems_access_token);
     }
 
-    $grade_token_data = LTI13::getGradeToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
-    if ( ! isset($grade_token_data['access_token']) ) {
-        $status = U::get($grade_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        return $status;
-    }
-    $grade_access_token = $grade_token_data['access_token'];
-    if ( $grade_access_token ) {
-        $parms .= "&gradetoken=".urlencode($grade_access_token);
+    $grade_token = LTI13::getGradeToken($CFG->wwwroot, $lti13_client_id, $lti13_token_url, $lti13_privkey);
+    if ( $grade_token ) {
+        $parms .= "&gradetoken=".urlencode($grade_token);
     }
 } else {
     echo("Did not receive lineitems url\n");
@@ -144,7 +138,7 @@ if ( $lineitems_access_token ) {
         }
     }
     echo("<p>LineItems token: ".htmlentities($lineitems_access_token)."</p>\n");
-    echo("<p>Grade token: ".htmlentities($grade_access_token)."</p>\n");
+    echo("<p>Grade token: ".htmlentities($grade_token)."</p>\n");
 } else {
     echo("Did not get lineitems_access_token\n");
 }

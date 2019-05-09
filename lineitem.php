@@ -39,27 +39,29 @@ if ( strlen($missing) > 0 ) {
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Grade Token</a></li>
+    <li><a href="#tabs-3">Debug Log</a></li>
     <li><a href="#tabs-2">Grade Send</a></li>
+    <li><a href="#tabs-5">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
 <?php
+$debug_log = array();
 if ( strlen($lti13_lineitem) > 0 ) {
     echo("Line Item URL: ".$lti13_lineitem."\n");
-    $grade_token_data = LTI13::getGradeToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey);
-    echo(Output::safe_var_dump($grade_token_data));
-    if ( ! isset($grade_token_data['access_token']) ) {
-        $status = U::get($grade_token_data, 'error', 'Did not receive access token');
-        error_log($status);
-        return $status;
-    }
-    $grade_access_token = $grade_token_data['access_token'];
+    $grade_access_token = LTI13::getGradeToken($CFG->wwwroot, $key_key, $lti13_token_url, $lti13_privkey, $debug_log);
     echo("Grade Access Token=".$grade_access_token);
-    $required_fields = false;
-    $jwt = LTI13::parse_jwt($grade_access_token, $required_fields);
-    print_jwt($jwt);
 } else {
     echo("Did not receive lineitem url\n");
+}
+?>
+    </pre>
+  </div>
+  <div id="tabs-3">
+    <pre>
+<?php
+if ( count($debug_log) > 0 ) {
+    echo(htmlentities(Output::safe_print_r($debug_log)));
 }
 ?>
     </pre>
@@ -74,7 +76,15 @@ $debug_log = array();
 $retval = $LTI->result->gradeSend(0.95, false, $debug_log);
 echo("Result of grade_send:\n");
 echo(Output::safe_var_dump($retval));
-echo(Output::safe_var_dump($debug_log));
+?>
+    </pre>
+  </div>
+  <div id="tabs-5">
+    <pre>
+<?php
+if ( count($debug_log) > 0 ) {
+    echo(htmlentities(Output::safe_print_r($debug_log)));
+}
 ?>
     </pre>
   </div>
