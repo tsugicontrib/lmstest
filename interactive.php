@@ -69,11 +69,13 @@ if ( strlen($lti13_lineitems) > 0 ) {
 $url = false;
 if ( $lineitems_access_token ) {
     $debug_log = array();
-    $url = $lti13_lineitems;
-    if ( strlen($filter_tag) > 0 ) $url = U::add_url_parm($url, 'tag', $filter_tag);
-    if ( strlen($filter_lti_link_id) > 0 ) $url = U::add_url_parm($url, 'lti_link_id', $filter_lti_link_id);
-    if ( strlen($filter_resource_id) > 0 ) $url = U::add_url_parm($url, 'resource_id', $filter_resource_id);
-    $lineitems = LTI13::loadLineItems($url, $lineitems_access_token, $debug_log);
+
+    $search = array();
+    if ( strlen($filter_tag) > 0 ) $search['tag'] = $filter_tag;
+    if ( strlen($filter_lti_link_id) > 0 ) $search['lti_link_id'] = $filter_lti_link_id;
+    if ( strlen($filter_resource_id) > 0 ) $search['resource_id'] = $filter_resource_id;
+    $lineitems = $LTI->context->loadLineItems($search, $debug_log);
+
     if ( is_string($lineitems) ) {
         echo($lineitems."\n");
     } else {
