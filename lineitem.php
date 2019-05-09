@@ -39,9 +39,9 @@ if ( strlen($missing) > 0 ) {
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Grade Token</a></li>
-    <li><a href="#tabs-3">Debug Log</a></li>
+    <li><a href="#tabs-1d">Debug Log</a></li>
     <li><a href="#tabs-2">Grade Send</a></li>
-    <li><a href="#tabs-5">Debug Log</a></li>
+    <li><a href="#tabs-2d">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
@@ -57,15 +57,7 @@ if ( strlen($lti13_lineitem) > 0 ) {
 ?>
     </pre>
   </div>
-  <div id="tabs-3">
-    <pre>
-<?php
-if ( count($debug_log) > 0 ) {
-    echo(htmlentities(Output::safe_print_r($debug_log)));
-}
-?>
-    </pre>
-  </div>
+<?php print_debug_log("tabs-1d", $debug_log); ?>
   <div id="tabs-2">
     <pre>
 <?php
@@ -79,15 +71,7 @@ echo(Output::safe_var_dump($retval));
 ?>
     </pre>
   </div>
-  <div id="tabs-5">
-    <pre>
-<?php
-if ( count($debug_log) > 0 ) {
-    echo(htmlentities(Output::safe_print_r($debug_log)));
-}
-?>
-    </pre>
-  </div>
+<?php print_debug_log("tabs-2d", $debug_log); ?>
 </div>
 
 <?php

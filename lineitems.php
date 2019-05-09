@@ -46,7 +46,7 @@ if ( strlen($missing) > 0 ) {
     <li><a href="#tabs-1">Token</a></li>
     <li><a href="#tabs-1d">Debug Log</a></li>
     <li><a href="#tabs-2">LineItems List</a></li>
-    <li><a href="#tabs-3">Debug Log</a></li>
+    <li><a href="#tabs-2d">Debug Log</a></li>
   </ul>
   <div id="tabs-1">
     <pre>
@@ -63,15 +63,7 @@ if ( strlen($lti13_lineitems) > 0 && strlen($lti13_lineitems) > 0 ) {
 ?>
     </pre>
   </div>
-  <div id="tabs-1d">
-    <pre>
-<?php
-if ( count($debug_log) > 0 ) {
-    echo(htmlentities(Output::safe_print_r($debug_log)));
-}
-?>
-    </pre>
-  </div>
+<?php print_debug_log("tabs-1d", $debug_log); ?>
   <div id="tabs-2">
     <pre>
 <?php
@@ -105,16 +97,7 @@ if ( $lineitems_access_token ) {
 ?>
     </pre>
   </div>
-  <div id="tabs-3">
-    <pre>
-<?php
-if ( count($debug_log) > 0 ) {
-    echo(htmlentities(Output::safe_print_r($debug_log)));
-}
-?>
-    </pre>
-  </div>
-
+<?php print_debug_log("tabs-2d", $debug_log); ?>
 </div>
 <?php
 $OUTPUT->footerStart();

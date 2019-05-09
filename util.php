@@ -13,3 +13,11 @@ function print_jwt($jwt) {
         echo("\n");
     }
 }
+
+function print_debug_log($div, $debug_log) {
+    echo('<div id="'.$div.'"><pre>'."\n");
+    if ( count($debug_log) > 0 ) {
+        echo(htmlentities(\Tsugi\UI\Output::safe_print_r($debug_log)));
+    }
+    echo("\n<pre>\n</div>\n");
+}
