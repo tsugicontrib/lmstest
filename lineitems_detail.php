@@ -3,21 +3,22 @@
 require_once("../config.php");
 
 use \Tsugi\UI\Output;
-use \Tsugi\Util\LTI13;
+use \Tsugi\Core\LTIX;
 
 $debug_log = false;
 $retval = false;
 
+// Handle all forms of launch
+$LTI = LTIX::requireData();
+
 $lineitem_url = $_REQUEST['id'];
-$token = $_REQUEST['token'];
 $debug_log = array();
 
 echo("<pre>\n");
 
 echo("Results: $lineitem_url\n");
-echo("Token: $token\n");
 
-$lineitem = LTI13::loadLineItem($lineitem_url, $token, $debug_log);
+$lineitem = $LTI->context->loadLineItem($lineitem_url, $debug_log);
 if ( is_string($lineitem) ) {
     echo("Failed loading ".htmlentities($lineitem_url)."\n");
     echo("Status: ".$lineitem."\n");
