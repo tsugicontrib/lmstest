@@ -11,7 +11,7 @@ $LTI = LTIX::requireData();
 $debug_log = array();
 $retval = false;
 
-$lti13_lineitem = $_REQUEST['id'];
+$lineitem = $_REQUEST['id'];
 
 $user_key = LTIX::ltiParameter('user_key');
 
@@ -28,7 +28,7 @@ $grade = U::get($_REQUEST,'grade');
 ?>
 <h1>Send a grade</h1>
 <pre>
-Lineitem: <?= htmlentities($lti13_lineitem) ?>
+Lineitem: <?= htmlentities($lineitem) ?>
 </pre>
 <?php if ( ! $grade ) { ?>
 <form>
@@ -45,7 +45,7 @@ echo("<pre>\n");
 
 $comment = "Sending grade $grade user_key=$user_key";
 
-$retval = $LTI->context->sendLineItem($lti13_lineitem, $user_key, $grade, $comment, $debug_log);
+$retval = $LTI->context->sendLineItem($lineitem, $user_key, $grade, $comment, $debug_log);
 
 if ( $retval ) {
     echo("\nReturn value\n");
