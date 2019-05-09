@@ -2,21 +2,18 @@
 
 require_once("../config.php");
 
-use \Tsugi\Util\LTI13;
 use \Tsugi\Core\LTIX;
 
 $LTI = LTIX::requireData();
 
 $lineitem_url = $_REQUEST['id'];
-$token = $_REQUEST['token'];
-if ( isset($_REQUEST['gradetoken']) ) $token = $_REQUEST['gradetoken'];
 $debug_log = array();
 
 echo("<pre>\n");
 
 $debug_log = array();
 
-if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['scoreMaximum']) ) {
+if ( isset($_POST['id']) && isset($_POST['scoreMaximum']) ) {
 
     $newitem = new \stdClass();
     if ( isset($_POST['scoreMaximum']) && $_POST['scoreMaximum'] > 0 ) $newitem->scoreMaximum = $_POST['scoreMaximum']+0;
@@ -25,7 +22,7 @@ if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['scoreMaximum
     if ( isset($_POST['tag']) && strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
     
     echo("Updating line item\n");
-    $retval = LTI13::updateLineItem($_POST['id'], $token, $newitem, $debug_log);
+    $retval = $LTI->context->updateLineItem($lineitem_url, $newitem, $debug_log);
 
     if ( $retval ) {
         var_dump($retval);
@@ -38,7 +35,7 @@ if ( isset($_POST['token']) && isset($_POST['id']) && isset($_POST['scoreMaximum
     return;
 }
 
-$lineitem = LTI13::loadLineItem($lineitem_url, $token, $debug_log);
+$lineitem = $LTI->context->loadLineItem($lineitem_url, $debug_log);
 if ( is_string($lineitem) ) {
     echo("Failed loading ".htmlentities($lineitem_url)."\n");
     echo("Status: ".$lineitem."\n");
@@ -54,7 +51,6 @@ $resourceId = isset($lineitem->resourceId) ? $lineitem->resourceId : '';
 <h1>Update a Lineitem</h1>
 <p>Fields left blank will not be updated.</p>
 <form method="POST">
-<input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
 <input type="hidden" name="id" value="<?= htmlentities($_REQUEST['id']) ?>">
 <p>scoreMaximum <input type="text" name="scoreMaximum" value="<?= htmlentities($scoreMaximum) ?>"></p>
 <p>label <input type="text" name="label" value="<?= htmlentities($label) ?>"></p>
