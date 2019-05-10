@@ -45,7 +45,7 @@ echo("<pre>\n");
 
 $comment = "Sending grade $grade user_key=$user_key";
 
-$retval = $LTI->context->sendLineItem($lineitem, $user_key, $grade, $comment, $debug_log);
+$retval = $LTI->context->sendLineItemResult($lineitem, $user_key, $grade, $comment, $debug_log);
 
 if ( $retval ) {
     echo("\nReturn value\n");
