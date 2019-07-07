@@ -13,10 +13,10 @@ $retval = false;
 
 $lineitem = $_REQUEST['id'];
 
-$user_key = LTIX::ltiParameter('user_key');
+$subject_key = LTIX::ltiParameter('subject_key');
 
 $missing = '';
-if ( strlen($user_key) < 1 ) $missing .= ' ' . 'user_key';
+if ( strlen($subject_key) < 1 ) $missing .= ' ' . 'subject_key';
 
 if ( strlen($missing) > 0 ) {
     echo("<pre>\n");
@@ -43,9 +43,9 @@ Lineitem: <?= htmlentities($lineitem) ?>
 
 echo("<pre>\n");
 
-$comment = "Sending grade $grade user_key=$user_key";
+$comment = "Sending grade $grade subject_key=$subject_key";
 
-$retval = $LTI->context->sendLineItemResult($lineitem, $user_key, $grade, $comment, $debug_log);
+$retval = $LTI->context->sendLineItemResult($lineitem, $subject_key, $grade, $comment, $debug_log);
 
 if ( $retval ) {
     echo("\nReturn value\n");
