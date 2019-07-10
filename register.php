@@ -1,6 +1,6 @@
 <?php
 
-$REGISTER_LTI2 = array(
+$REGISTER_LTI = array(
 "name" => "LMS Test",
 "FontAwesome" => "fa-medkit",
 "short_name" => "LMSTest",
