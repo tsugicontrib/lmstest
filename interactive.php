@@ -10,12 +10,12 @@ require_once "util.php";
 // Handle all forms of launch
 $LTI = LTIX::requireData();
 
+require_once("nav.php");
+
 // Render view
 $OUTPUT->header();
 $OUTPUT->bodyStart();
-$OUTPUT->topNav();
-
-require_once("nav.php");
+$OUTPUT->topNav($menu);
 
 $filter_tag = U::get($_GET, 'tag', '');
 $filter_lti_link_id = U::get($_GET, 'lti_link_id', '');

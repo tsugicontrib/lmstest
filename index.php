@@ -13,12 +13,13 @@ require_once "util.php";
 // Handle all forms of launch
 $LTI = LTIX::requireData();
 
+require_once("nav.php");
+
 // Render view
 $OUTPUT->header();
 $OUTPUT->bodyStart();
-$OUTPUT->topNav();
+$OUTPUT->topNav($menu);
 
-require_once("nav.php");
 
 $OUTPUT->welcomeUserCourse();
 
