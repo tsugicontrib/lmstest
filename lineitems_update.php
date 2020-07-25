@@ -4,6 +4,15 @@ require_once("../config.php");
 
 use \Tsugi\Core\LTIX;
 
+function tweak($postval) {
+    if ( strcasecmp($postval, 'true') == 0 ) return true;
+    if ( strcasecmp($postval, 'false') == 0 ) return false;
+    if ( strcasecmp($postval, 'null') == 0 ) return null;
+    if ( intval($postval) && strpos($postval, '.') === false ) return intval($postval);
+    if ( floatval($postval) ) return floatval($postval);
+    return $postval;
+}
+
 $LTI = LTIX::requireData();
 
 $lineitem_url = $_REQUEST['id'];
@@ -18,8 +27,11 @@ if ( isset($_POST['id']) && isset($_POST['scoreMaximum']) ) {
     if ( isset($_POST['label']) && strlen($_POST['label']) > 0 ) $newitem->label = $_POST['label'];
     if ( isset($_POST['resourceId']) && strlen($_POST['resourceId']) > 0 ) $newitem->resourceId = $_POST['resourceId'];
     if ( isset($_POST['tag']) && strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
+    if ( strlen($_POST['key1']) > 0 && strlen($_POST['val1']) > 0 ) $newitem->{$_POST['key1']} = tweak($_POST['val1']);
+    if ( strlen($_POST['key2']) > 0 && strlen($_POST['val2']) > 0 ) $newitem->{$_POST['key2']} = tweak($_POST['val2']);
     
     echo("Updating line item\n");
+    var_dump($newitem);
     $retval = $LTI->context->updateLineItem($lineitem_url, $newitem, $debug_log);
 
     if ( $retval ) {
@@ -48,15 +60,26 @@ $resourceId = isset($lineitem->resourceId) ? $lineitem->resourceId : '';
 </pre>
 <h1>Update a Lineitem</h1>
 <p>Fields left blank will not be updated.</p>
+<p>
 <form method="POST">
 <input type="hidden" name="id" value="<?= htmlentities($_REQUEST['id']) ?>">
 <p>scoreMaximum <input type="text" name="scoreMaximum" value="<?= htmlentities($scoreMaximum) ?>"></p>
 <p>label <input type="text" name="label" value="<?= htmlentities($label) ?>"></p>
 <p>resourceId <input type="text" name="resourceId" value="<?= htmlentities($resourceId) ?>"></p>
 <p>tag <input type="text" name="tag" value="<?= htmlentities($tag) ?>"></p>
+<p><input type="text" name="key1">: <input type="text" name="val1"></p>
+<p><input type="text" name="key2">: <input type="text" name="val2"></p>
 <input type="submit" value="Update LineItem">
 <input type="reset" value="Reset">
 </form>
+</p>
+<p>
+Some extensions
+<pre>
+https://www.sakailms.org/spec/lti-ags/v2p0/releaseToStudent true
+https://www.sakailms.org/spec/lti-ags/v2p0/includeInComputation false
+</pre>
+</p>
 
 <!--
 {

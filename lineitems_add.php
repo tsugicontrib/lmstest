@@ -10,6 +10,15 @@ $LTI = LTIX::requireData();
 $debug_log = false;
 $retval = false;
 
+function tweak($postval) {
+    if ( strcasecmp($postval, 'true') == 0 ) return true;
+    if ( strcasecmp($postval, 'false') == 0 ) return false;
+    if ( strcasecmp($postval, 'null') == 0 ) return null;
+    if ( intval($postval) && strpos($postval, '.') === false ) return intval($postval);
+    if ( floatval($postval) ) return floatval($postval);
+    return $postval;
+}
+
 if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximum']) &&
  isset($_POST['label']) && isset($_POST['resourceId']) && isset($_POST['tag']) ) {
 
@@ -18,6 +27,8 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
     if ( strlen($_POST['label']) > 0 ) $newitem->label = $_POST['label'];
     if ( strlen($_POST['resourceId']) > 0 ) $newitem->resourceId = $_POST['resourceId'];
     if ( strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
+    if ( strlen($_POST['key1']) > 0 && strlen($_POST['val1']) > 0 ) $newitem->{$_POST['key1']} = tweak($_POST['val1']);
+    if ( strlen($_POST['key2']) > 0 && strlen($_POST['val2']) > 0 ) $newitem->{$_POST['key2']} = tweak($_POST['val2']);
     
     $debug_log = array();
     $retval = $LTI->context->createLineItem($newitem, $debug_log);
@@ -31,8 +42,18 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
 <p>label <input type="text" name="label"></p>
 <p>resourceId <input type="text" name="resourceId"></p>
 <p>tag <input type="text" name="tag"></p>
+<p><input type="text" name="key1">: <input type="text" name="val1"></p>
+<p><input type="text" name="key2">: <input type="text" name="val2"></p>
 <input type="submit" value="Add LineItem">
 </form>
+</p>
+<p>
+Some extensions
+<pre>
+https://www.sakailms.org/spec/lti-ags/v2p0/releaseToStudent true
+https://www.sakailms.org/spec/lti-ags/v2p0/includeInComputation false
+</pre>
+</p>
 
 <!--
 {
