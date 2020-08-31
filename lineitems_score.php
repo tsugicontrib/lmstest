@@ -25,6 +25,8 @@ if ( strlen($missing) > 0 ) {
 }
 
 $grade = U::get($_REQUEST,'grade');
+$scoreMaximum = U::get($_REQUEST,'scoreMaximum');
+$comment = U::get($_REQUEST,'comment');
 $delete = U::get($_REQUEST,'delete');
 ?>
 <h1>Send a grade</h1>
@@ -33,9 +35,10 @@ Lineitem: <?= htmlentities($lineitem) ?>
 </pre>
 <?php if ( ! ($grade || $delete) ) { ?>
 <form>
-<input type="hidden" name="url" value="<?= htmlentities($_REQUEST['url']) ?>">
 <input type="hidden" name="id" value="<?= htmlentities($_REQUEST['id']) ?>">
 <p>grade <input type="text" name="grade"></p>
+<p>scoreMaximum <input type="text" name="scoreMaximum"></p>
+<p>comment <input type="text" name="comment"></p>
 <input type="submit" name="send" value="Send Score">
 <input type="submit" name="delete" value="Delete Score">
 </form>
@@ -45,12 +48,9 @@ Lineitem: <?= htmlentities($lineitem) ?>
 
 echo("<pre>\n");
 
-$comment = "Sending grade $grade subject_key=$subject_key";
-if ( $delete ) $comment = "Deleteing grade subject_key=$subject_key";
-
 // TODO: Maybe we should make delete its own method
 // Per Eric Preston, since we are overloading update - comments should work with null grades
-$retval = $LTI->context->sendLineItemResult($lineitem, $subject_key, $grade, $comment, $debug_log);
+$retval = $LTI->context->sendLineItemResult($lineitem, $subject_key, $grade, $scoreMaximum, $comment, $debug_log);
 
 if ( $retval ) {
     echo("\nReturn value\n");
