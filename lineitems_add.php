@@ -34,7 +34,7 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
     $retval = $LTI->context->createLineItem($newitem, $debug_log);
 }
 ?>
-<h1>Add a new Lineitem</h1>
+<h1>Add a new Lineitem (all items are optional)</h1>
 <form method="POST">
 <input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
 <input type="hidden" name="url" value="<?= htmlentities($_REQUEST['url']) ?>">
@@ -42,13 +42,14 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
 <p>label <input type="text" name="label"></p>
 <p>resourceId <input type="text" name="resourceId"></p>
 <p>tag <input type="text" name="tag"></p>
+<p>Extensions (key:value)</p>
 <p><input type="text" name="key1">: <input type="text" name="val1"></p>
 <p><input type="text" name="key2">: <input type="text" name="val2"></p>
 <input type="submit" value="Add LineItem">
 </form>
 </p>
 <p>
-Some extensions
+Two Sakai extensions
 <pre>
 https://www.sakailms.org/spec/lti-ags/v2p0/releaseToStudent true
 https://www.sakailms.org/spec/lti-ags/v2p0/includeInComputation false
