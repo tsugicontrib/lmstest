@@ -33,7 +33,7 @@ $OUTPUT->welcomeUserCourse();
 <h1>Send a score for current user</h1>
 <?php
 if ( $LTI->user->instructor ) {
-   echo("<p>Note: Instructors can't send grades to most LMS systems</p>\n\n");
+   echo("<p style=\"color:red;\">Note: Instructors can't send grades to most LMS systems</p>\n\n");
 }
 ?>
 <pre>
