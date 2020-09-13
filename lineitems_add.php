@@ -34,12 +34,12 @@ if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximu
     $retval = $LTI->context->createLineItem($newitem, $debug_log);
 }
 ?>
-<h1>Add a new Lineitem (all items are optional)</h1>
+<h1>Add a new Lineitem</h1>
 <form method="POST">
 <input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
 <input type="hidden" name="url" value="<?= htmlentities($_REQUEST['url']) ?>">
-<p>scoreMaximum <input type="text" name="scoreMaximum"></p>
-<p>label <input type="text" name="label"></p>
+<p>scoreMaximum (*) <input type="text" name="scoreMaximum"></p>
+<p>label (*) <input type="text" name="label"></p>
 <p>resourceId <input type="text" name="resourceId"></p>
 <p>tag <input type="text" name="tag"></p>
 <p>Extensions (key:value)</p>
