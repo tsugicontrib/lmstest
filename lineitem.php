@@ -30,8 +30,8 @@ if ( $LTI->user->instructor ) {
    echo("Note: Instructors can't send grades to most LMS systems\n\n");
 }
 $debug_log = array();
-$retval = $LTI->result->gradeSend(0.95, false, $debug_log);
-echo("Result of grade_send:\n");
+$retval = $LTI->result->gradeSend(0.85, false, $debug_log);
+echo("Sent score of 0.85, result:\n");
 echo(Output::safe_var_dump($retval));
 ?>
     </pre>
