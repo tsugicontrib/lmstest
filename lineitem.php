@@ -27,12 +27,22 @@ $OUTPUT->topNav($menu);
     <pre>
 <?php
 if ( $LTI->user->instructor ) {
-   echo("Note: Instructors can't send grades to most LMS systems\n\n");
+   echo("Note: Most LMS systems will not store instructor grades\n\n");
 }
 $debug_log = array();
 $retval = $LTI->result->gradeSend(0.85, false, $debug_log);
-echo("Sent score of 0.85, result:\n");
-echo(Output::safe_var_dump($retval));
+$transport = $LTI->result->lastSendTransport;
+if ( $retval === true && $transport ) {
+    echo("Sent score of 0.85 via ".htmlentities($transport).", result:\n");
+    echo(Output::safe_var_dump($retval));
+} else if ( $retval === true ) {
+    echo("Score of 0.85 was stored lcally (i.e. not sent to the server)\n");
+} else {
+    echo("Grade failure: ".htmlentities($retval)."\n");
+}
+echo("<hr/>\n");
+echo("Debug Log:\n");
+var_dump($debug_log);
 ?>
     </pre>
   </div>
