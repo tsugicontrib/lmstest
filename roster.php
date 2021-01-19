@@ -34,6 +34,12 @@ echo('Calling  $LTI->context->loadNamesAndRoles'."\n");
 $nrps = $LTI->context->loadNamesAndRoles(false, $debug_log);
 if ( ! $nrps ) {
     echo("Unable to load names and roles\n");
+} else if ( is_string($nrps) ) {
+    echo("Unable to load names and roles\n\n");
+    echo(htmlentities($nrps));
+} else if ( ! is_object($nrps) ) {
+    echo("Unable to load names and roles\n\n");
+    var_dump($nrps);
 } else {
     echo("Loaded ".count($nrps->members)." members\n");
     echo(htmlentities(Output::safe_print_r($nrps)));

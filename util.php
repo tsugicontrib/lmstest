@@ -17,7 +17,7 @@ function print_jwt($jwt) {
 function print_debug_log($div, $debug_log) {
     echo('<div id="'.$div.'"><pre>'."\n");
     if ( count($debug_log) > 0 ) {
-        echo(htmlentities(\Tsugi\UI\Output::safe_print_r($debug_log)));
+        echo(htmlentities(\Tsugi\UI\Output::safe_print_r($debug_log), ENT_SUBSTITUTE));
     }
-    echo("\n<pre>\n</div>\n");
+    echo("\n</pre>\n</div>\n");
 }
