@@ -40,6 +40,9 @@ if ( ! $nrps ) {
 } else if ( ! is_object($nrps) ) {
     echo("Unable to load names and roles\n\n");
     var_dump($nrps);
+} else if ( !isset($nrps->members) || !is_array($nrps->members) ) {
+    echo("context->loadNamesAndRoles members data incorrect format\n");
+    var_dump($nrps);
 } else {
     echo("Loaded ".count($nrps->members)." members\n");
     echo(htmlentities(Output::safe_print_r($nrps)));
@@ -57,7 +60,16 @@ $debug_log = array();
 echo('Calling  $LTI->context->loadNamesAndRoles(with sourcedids)'."\n");
 $nrps = $LTI->context->loadNamesAndRoles(true, $debug_log);
 if ( ! $nrps ) {
-    echo("Magic failed\n");
+    echo("context->loadNamesAndRoles retrieval failed\n");
+} else if ( is_string($nrps) ) {
+    echo("Unable to load names and roles\n\n");
+    echo(htmlentities($nrps));
+} else if ( ! is_object($nrps) ) {
+    echo("Unable to load names and roles\n\n");
+    var_dump($nrps);
+} else if ( !isset($nrps->members) || !is_array($nrps->members) ) {
+    echo("context->loadNamesAndRoles members data incorrect format\n");
+    var_dump($nrps);
 } else {
     echo("Loaded ".count($nrps->members)." members\n");
     echo(htmlentities(Output::safe_print_r($nrps)));
