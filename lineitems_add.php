@@ -2,6 +2,7 @@
 
 require_once("../config.php");
 
+use \Tsugi\Util\U;
 use \Tsugi\Core\LTIX;
 
 // Handle all forms of launch
@@ -19,25 +20,23 @@ function tweak($postval) {
     return $postval;
 }
 
-if ( isset($_POST['token']) && isset($_POST['url']) && isset($_POST['scoreMaximum']) &&
- isset($_POST['label']) && isset($_POST['resourceId']) && isset($_POST['tag']) ) {
+if ( isset($_POST['scoreMaximum']) && isset($_POST['label']) && isset($_POST['resourceId']) ) {
 
     $newitem = new \stdClass();
-    if ( $_POST['scoreMaximum'] > 0 ) $newitem->scoreMaximum = $_POST['scoreMaximum']+0;
-    if ( strlen($_POST['label']) > 0 ) $newitem->label = $_POST['label'];
-    if ( strlen($_POST['resourceId']) > 0 ) $newitem->resourceId = $_POST['resourceId'];
-    if ( strlen($_POST['tag']) > 0 ) $newitem->tag = $_POST['tag'];
-    if ( strlen($_POST['key1']) > 0 && strlen($_POST['val1']) > 0 ) $newitem->{$_POST['key1']} = tweak($_POST['val1']);
-    if ( strlen($_POST['key2']) > 0 && strlen($_POST['val2']) > 0 ) $newitem->{$_POST['key2']} = tweak($_POST['val2']);
+    $newitem->scoreMaximum = U::get($_POST,'scoreMaximum');
+    $newitem->label = U::get($_POST,'label');
+    $newitem->resourceId = U::get($_POST,'resourceId');
+    if ( strlen(U::get($_POST,'tag')) > 0 ) $newitem->tag = U::get($_POST,'tag');
+    if ( strlen(U::get($_POST,'key1')) > 0 && strlen(U::get($_POST,'val1')) > 0 ) $newitem->{$_POST['key1']} = tweak($_POST['val1']);
+    if ( strlen(U::get($_POST,'key2')) > 0 && strlen(U::get($_POST,'val2')) > 0 ) $newitem->{$_POST['key2']} = tweak($_POST['val2']);
     
     $debug_log = array();
     $retval = $LTI->context->createLineItem($newitem, $debug_log);
+    echo("<pre>\n");var_dump($retval);echo("</pre>\n");
 }
 ?>
 <h1>Add a new Lineitem</h1>
 <form method="POST">
-<input type="hidden" name="token" value="<?= htmlentities($_REQUEST['token']) ?>">
-<input type="hidden" name="url" value="<?= htmlentities($_REQUEST['url']) ?>">
 <p>scoreMaximum (*) <input type="text" name="scoreMaximum"></p>
 <p>label (*) <input type="text" name="label"></p>
 <p>resourceId <input type="text" name="resourceId"></p>
