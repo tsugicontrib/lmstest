@@ -34,8 +34,6 @@ $grade_token = false;
 $debug_log = array();
 $url = false;
 
-    $debug_log = array();
-
     $search = array();
     if ( strlen($filter_tag) > 0 ) $search['tag'] = $filter_tag;
     if ( strlen($filter_lti_link_id) > 0 ) $search['lti_link_id'] = $filter_lti_link_id;
@@ -97,6 +95,8 @@ $url = false;
 </form>
 </p>
 <?php
+
+if ( is_array($debug_log) && count($debug_log) > 0 ) print_debug_log("debug_log", $debug_log);
 
 $OUTPUT->footerStart();
 $OUTPUT->footerEnd();

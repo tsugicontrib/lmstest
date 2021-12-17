@@ -38,7 +38,7 @@ $lineitems = $LTI->context->loadLineItems($search, $debug_log);
 if ( is_string($lineitems) ) {
     echo($lineitems."\n");
 } else {
-    echo("Loaded ".count($lineitems)." members\n");
+    echo("Loaded ".count($lineitems)." lineitems\n");
     echo("\nAll lineitems:\n");
     echo(htmlentities(Output::safe_print_r($lineitems)));
     if ( count($lineitems) > 0 && isset($lineitems[0]->id) && is_string($lineitems[0]->id) ) {
