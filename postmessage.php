@@ -70,7 +70,6 @@ function sendForm() {
     let subject = document.getElementById('subject').value;
     if ( subject.length < 1 ) subject = document.getElementById('other_subject').value;
     let message_id = document.getElementById('message_id').value;
-    if ( message_id.length < 1 ) message_id = Math.random() + '';
     let height = document.getElementById('height').value;
     let key = document.getElementById('key').value;
     let value = document.getElementById('value').value;
