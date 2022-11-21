@@ -67,6 +67,8 @@ window.addEventListener("message", function(event) {
 }, false);
 
 function sendForm() {
+    document.getElementById('sent').innerHTML = '';
+    document.getElementById('received').innerHTML = '';
     let subject = document.getElementById('subject').value;
     if ( subject.length < 1 ) subject = document.getElementById('other_subject').value;
     let message_id = document.getElementById('message_id').value;
