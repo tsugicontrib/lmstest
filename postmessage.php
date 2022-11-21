@@ -35,6 +35,8 @@ $OUTPUT->topNav($menu);
 <input type="text" name="other_subject" id="other_subject"><br/>
 <label for="message_id"> message_id:</label>
 <input type="text" name="message_id" id="message_id"> (optional)<br/>
+<label for="key"> height:</label>
+<input type="text" name="height" id="height"> (for lti.frameResize only)<br/>
 <label for="key"> key:</label>
 <input type="text" name="key" id="key"> (optional)<br/>
 <label for="value"> value:</label>
@@ -69,6 +71,7 @@ function sendForm() {
     if ( subject.length < 1 ) subject = document.getElementById('other_subject').value;
     let message_id = document.getElementById('message_id').value;
     if ( message_id.length < 1 ) message_id = Math.random() + '';
+    let height = document.getElementById('height').value;
     let key = document.getElementById('key').value;
     let value = document.getElementById('value').value;
 
@@ -77,6 +80,7 @@ function sendForm() {
     };
 
     if ( message_id.length > 0 ) send_data.message_id = message_id;
+    if ( height.length > 0 ) send_data.height = height;
     if ( key.length > 0 ) send_data.key = key;
     if ( value.length > 0 ) send_data.value = value;
     console.log(send_data);
