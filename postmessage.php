@@ -18,6 +18,7 @@ $OUTPUT->bodyStart();
 $OUTPUT->topNav($menu);
 
 ?>
+<h1>Post Messages</h1>
 <form>
 <label for="subject"> subject:</label>
 <select name="subject" id="subject">
