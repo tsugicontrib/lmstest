@@ -43,8 +43,8 @@ if ( isset($_POST['scoreMaximum']) && isset($_POST['label']) && isset($_POST['re
 <p>label (*) <input type="text" name="label"></p>
 <p>resourceId <input type="text" name="resourceId"></p>
 <p>tag <input type="text" name="tag"></p>
-<p>endDateTime<input type="text" name="endDateTime" placeholder="2022-08-11T01:31:07Z"></p>
 <p>startDateTime<input type="text" name="startDateTime" placeholder="2022-08-11T01:31:07Z"></p>
+<p>endDateTime<input type="text" name="endDateTime" placeholder="2022-08-11T01:31:07Z"></p>
 <p>Extensions (key:value)</p>
 <p><input type="text" name="key1">: <input type="text" name="val1"></p>
 <p><input type="text" name="key2">: <input type="text" name="val2"></p>

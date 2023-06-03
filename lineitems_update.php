@@ -72,8 +72,8 @@ $endDateTime = isset($lineitem->endDateTime) ? $lineitem->endDateTime : '';
 <p>label <input type="text" name="label" value="<?= htmlentities($label) ?>"></p>
 <p>resourceId <input type="text" name="resourceId" value="<?= htmlentities($resourceId) ?>"></p>
 <p>tag <input type="text" name="tag" value="<?= htmlentities($tag) ?>"></p>
-<p>endDateTime<input type="text" name="endDateTime" placeholder="2022-08-11T01:31:07Z" value="<?= htmlentities($endDateTime) ?>"></p>
 <p>startDateTime<input type="text" name="startDateTime" placeholder="2022-08-11T01:31:07Z" value="<?= htmlentities($startDateTime) ?>"></p>
+<p>endDateTime<input type="text" name="endDateTime" placeholder="2022-08-11T01:31:07Z" value="<?= htmlentities($endDateTime) ?>"></p>
 <p><input type="text" name="key1">: <input type="text" name="val1"></p>
 <p><input type="text" name="key2">: <input type="text" name="val2"></p>
 <input type="submit" value="Update LineItem">
